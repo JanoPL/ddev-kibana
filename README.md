@@ -13,3 +13,7 @@ From within the container, the kibana container is reached at hostname "kibana",
 ## Connection 
 
 You can access the Kibana server directly from the host by visiting `https://<projectname>.ddev.site:5601`
+
+## Version for Kibana
+
+Version is depends on image using in official addon drud/ddev-elasticsearch  
