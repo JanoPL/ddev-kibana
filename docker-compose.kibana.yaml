@@ -4,7 +4,7 @@ services:
   kibana:
     container_name: ddev-${DDEV_SITENAME}-kibana
     hostname: ${DDEV_SITENAME}-kibana
-    image: kibana:7.17.1
+    image: kibana:7.17.6
     expose:
       - "5601"
     environment:
