@@ -16,4 +16,4 @@ You can access the Kibana server directly from the host by visiting `https://<pr
 
 ## Version for Kibana
 
-Version is depends on image using in official addon drud/ddev-elasticsearch  
+Version is depends on image using in official addon [drud/ddev-elasticsearch](https://github.com/drud/ddev-elasticsearch)  
