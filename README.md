@@ -12,7 +12,10 @@ From within the container, the kibana container is reached at hostname "kibana",
 
 ## Connection
 
-You can access the Kibana server directly from the host by visiting `https://<projectname>.ddev.site:5601`
+You can access the Kibana server directly from the host by visiting:
+
+- `https://<projectname>.ddev.site:5601`
+- `http://<projectname>.ddev.site:5600`
 
 ## Version for Kibana
 
