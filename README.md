@@ -6,14 +6,17 @@ Uses [Kibana official image](https://registry.hub.docker.com/_/kibana)
 
 `ddev get janopl/ddev-kibana`
 
-## Configuration 
+## Configuration
 
-From within the container, the kibana container is reached at hostname "kibana", port: 5601 
+From within the container, the kibana container is reached at hostname "kibana", port: 5601
 
-## Connection 
+## Connection
 
-You can access the Kibana server directly from the host by visiting `https://<projectname>.ddev.site:5601`
+You can access the Kibana server directly from the host by visiting:
+
+- `https://<projectname>.ddev.site:5601`
+- `http://<projectname>.ddev.site:5600`
 
 ## Version for Kibana
 
-Version is depends on image using in official addon [drud/ddev-elasticsearch](https://github.com/drud/ddev-elasticsearch)  
+Version is depends on image using in official addon [drud/ddev-elasticsearch](https://github.com/drud/ddev-elasticsearch)
