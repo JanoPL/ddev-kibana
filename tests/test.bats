@@ -9,13 +9,13 @@ setup() {
   cd "${TESTDIR}"
   ddev config --project-name=${PROJNAME}
   ddev get drud/ddev-elasticsearch
-  ddev start -y
+  ddev start -y >/dev/null 2>&1
 }
 
 teardown() {
   set -eu -o pipefail
   cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-  ddev delete -Oy ${PROJNAME}
+  ddev delete -Oy ${PROJNAME} >/dev/null 2>&1
   [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
 }
 
@@ -24,7 +24,7 @@ teardown() {
   cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
   echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get ${DIR}
-  ddev restart
+  ddev restart >/dev/null 2>&1
 }
 
 @test "install from release" {
@@ -32,5 +32,5 @@ teardown() {
   cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
   echo "# ddev get drud/ddev-kibana with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get janopl/ddev-kibana
-  ddev restart
+  ddev restart >/dev/null 2>&1
 }
