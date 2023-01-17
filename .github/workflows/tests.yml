@@ -31,7 +31,7 @@ jobs:
 
     strategy:
       matrix:
-        ddev_version: [stable, HEAD]
+        ddev_version: [ stable ]
         # ddev_version: [stable, edge, HEAD, PR]
         os: [ubuntu-22.04, ubuntu-20.04]
         # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
