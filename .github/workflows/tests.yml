@@ -7,7 +7,7 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+' #semantic version format
 
   schedule:
-  - cron: '01 07 * * *'
+    - cron: '01 07 * * *'
 
   workflow_dispatch:
     inputs:
@@ -15,13 +15,14 @@ on:
         description: 'Debug with tmate set "debug_enabled"'
         required: false
         default: "false"
-
 defaults:
   run:
     shell: bash
-
 env:
   NIGHTLY_DDEV_PR_URL: "https://nightly.link/drud/ddev/actions/runs/1720215802/ddev-linux-amd64.zip"
+
+permissions:
+  contents: write
 
 jobs:
   tests:
@@ -33,7 +34,7 @@ jobs:
       matrix:
         ddev_version: [ stable ]
         # ddev_version: [stable, edge, HEAD, PR]
-        os: [ubuntu-22.04, ubuntu-20.04]
+        os: [ubuntu-22.04]
         # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
       fail-fast: false
 
