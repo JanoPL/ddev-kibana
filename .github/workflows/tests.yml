@@ -9,22 +9,20 @@ on:
   schedule:
     - cron: '01 07 * * *'
 
-  permissions:
-    contents: write
-
   workflow_dispatch:
     inputs:
       debug_enabled:
         description: 'Debug with tmate set "debug_enabled"'
         required: false
         default: "false"
-
 defaults:
   run:
     shell: bash
-
 env:
   NIGHTLY_DDEV_PR_URL: "https://nightly.link/drud/ddev/actions/runs/1720215802/ddev-linux-amd64.zip"
+
+permissions:
+  contents: write
 
 jobs:
   tests:
