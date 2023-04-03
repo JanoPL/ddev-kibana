@@ -1,4 +1,5 @@
-name: tests
+name: tests ddev-kibana
+
 on:
   pull_request:
   push:
@@ -15,9 +16,11 @@ on:
         description: 'Debug with tmate set "debug_enabled"'
         required: false
         default: "false"
+
 defaults:
   run:
     shell: bash
+
 env:
   NIGHTLY_DDEV_PR_URL: "https://nightly.link/drud/ddev/actions/runs/1720215802/ddev-linux-amd64.zip"
 
@@ -32,10 +35,8 @@ jobs:
 
     strategy:
       matrix:
-        ddev_version: [ stable ]
-        # ddev_version: [stable, edge, HEAD, PR]
-        os: [ubuntu-22.04]
-        # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
+        ddev_version: [ stable ] # ddev_version: [stable, edge, HEAD, PR]
+        os: [ubuntu-22.04] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
@@ -75,6 +76,7 @@ jobs:
       run: | 
         mkdir junk && pushd junk && ddev config --auto && ddev debug download-images >/dev/null
         docker pull kibana:7.17.6 >/dev/null
+
     - name: tmate debugging session
       uses: mxschmitt/action-tmate@v3
       with:
