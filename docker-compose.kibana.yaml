@@ -1,5 +1,4 @@
 #ddev-generated
-version: '3'
 services:
   kibana:
     container_name: ddev-${DDEV_SITENAME}-kibana
