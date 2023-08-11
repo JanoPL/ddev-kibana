@@ -3,7 +3,10 @@ name: ddev-kibana
 pre_install_actions:
 
 project_files:
-- docker-compose.kibana.yaml
+  - docker-compose.kibana.yaml
+
+dependencies:
+  - elasticsearch
 
 global_files:
 
