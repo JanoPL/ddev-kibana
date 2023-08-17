@@ -21,9 +21,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  NIGHTLY_DDEV_PR_URL: "https://nightly.link/drud/ddev/actions/runs/1720215802/ddev-linux-amd64.zip"
-
 permissions:
   contents: write
 
@@ -43,6 +40,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
 
     - name: Set up Homebrew
       id: set-up-homebrew
@@ -50,20 +49,20 @@ jobs:
 
     - name: Environment setup
       run: |
-        brew install bats-core mkcert
+        brew install bats-core mkcert jq
         mkcert -install
 
     - name: Use ddev stable
       if: matrix.ddev_version == 'stable'
-      run: brew install drud/ddev/ddev
+      run: brew install ddev/ddev/ddev
 
     - name: Use ddev edge
       if: matrix.ddev_version == 'edge'
-      run: brew install drud/ddev-edge/ddev
+      run: brew install ddev/ddev-edge/ddev
 
     - name: Use ddev HEAD
       if: matrix.ddev_version == 'HEAD'
-      run: brew install --HEAD drud/ddev/ddev
+      run: brew install --HEAD ddev/ddev/ddev
 
     - name: Use ddev PR
       if: matrix.ddev_version == 'PR'
