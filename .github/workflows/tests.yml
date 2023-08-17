@@ -80,7 +80,7 @@ jobs:
           docker save kibana:7.17.6 > /tmp/images/docker-image.tar
 
       - name: Upload Artifacts
-        uses: action/upload-artifact@v3
+        uses: actions/upload-artifact@v3
         with:
           name: docker-artifact
           path: /tmp/images
@@ -112,7 +112,7 @@ jobs:
             ${{ runner.os }}-${{ env.Cache_Workplace_Key }}-checkout-${{ matrix.ddev_version}}-${{ matrix.os }}-${{ github.run_id }}
 
       - name: Retrieve saved Docker image
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: docker-artifact
           path: /tmp/docker/images
