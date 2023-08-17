@@ -8,7 +8,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+' #semantic version format
 
   schedule:
-    - cron: '00 07 * * 5'
+    - cron: '00 20 * * 5'
+    - cron: '00 07 * * *'
 
   workflow_dispatch:
     inputs:
@@ -26,9 +27,67 @@ permissions:
 
 env:
   GITHUB_REPOSITORY: janopl/ddev-kibana
+  CACHE_WORKPLACE_KEY: ${{ github.workflow }}-workspace
+  TEST_PATH: tests
 
 jobs:
+  checkout:
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        ddev_version: [ stable ] # ddev_version: [stable, edge, HEAD, PR]
+        os: [ ubuntu-22.04 ] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodule: true
+
+      - name: Store workspace in cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}
+          key: | 
+            ${{ runner.os }}-${{ env.Cache_Workplace_Key }}-checkout-${{ matrix.ddev_version}}-${{ matrix.os }}-${{ github.run_id }}
+
+  download-image:
+    name: Download docker images
+
+    defaults:
+      run:
+        shell: bash
+
+    strategy:
+      matrix:
+        ddev_version: [ stable ] # ddev_version: [stable, edge, HEAD, PR]
+        os: [ ubuntu-22.04 ] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
+      fail-fast: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: kibana
+        run: |
+          docker pull kibana:7.17.6 >/dev/null
+          mkdir -p /tmp/images
+          docker save kibana:7.17.6 > /tmp/images/docker-image.tar
+
+      - name: Upload Artifacts
+        uses: action/upload-artifact@v3
+        with:
+          name: docker-artifact
+          path: /tmp/images
+          retention-days: 1
+
   tests:
+    name: tests
     defaults:
       run:
         shell: bash
@@ -41,29 +100,40 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    needs: [ checkout, download-image ]
+
     steps:
-#    - uses: actions/checkout@v3
-#      with:
-#        submodules: 'true'
+      - name: restore cache workspace
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}
+          key: ${{ runner.os }}-${{ env.Cache_Workplace_Key }}-checkout-${{ matrix.ddev_version}}-${{ matrix.os }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.Cache_Workplace_Key }}-checkout-${{ matrix.ddev_version}}-${{ matrix.os }}-${{ github.run_id }}
 
-    - name: Set up Homebrew
-      id: set-up-homebrew
-      uses: Homebrew/actions/setup-homebrew@master
+      - name: Retrieve saved Docker image
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-artifact
+          path: /tmp/docker/images
 
-    - name: Environment setup
-      run: |
-        brew install jq
+      - name: Docker load
+        run: |
+          cd /tmp/docker/images
+          docker load < docker-image.tar
 
-    - name: Download docker images
-      run: |
-        docker pull kibana:7.17.6 >/dev/null
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
-    - uses: julienloizelet/ddev-add-on-test@v0.3.0
-      with:
-        ddev_version: ${{ matrix.ddev_version }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        debug_enabled: ${{ github.event.inputs.debug_enabled }}
-        addon_repository: ${{ env.GITHUB_REPOSITORY }}
+      - name: Environment setup
+        run: |
+          brew install jq
 
-
-
+      - uses: julienloizelet/ddev-add-on-test@v0.3.0
+        with:
+          ddev_version: ${{ matrix.ddev_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          debug_enabled: ${{ github.event.inputs.debug_enabled }}
+          addon_repository: ${{ env.GITHUB_REPOSITORY }}
+          addon_path: ${{ env.TEST_PATH }}
