@@ -26,6 +26,7 @@ permissions:
   contents: write
 
 env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: "janopl/ddev-kibana"
   CACHE_WORKPLACE_KEY: ${{ github.workflow }}-workspace
   TEST_PATH: .
@@ -53,10 +54,6 @@ jobs:
         with:
           submodules: 'true'
 
-      - name: Retrieve last tag of add-on
-        run: |
-            echo "ADD_ON_LAST_TAG=$(curl -Ls -o /dev/null -w %{url_effective} https://github.com/${{ matrix.add_on }}/releases/latest | grep -oP "\/tag\/\K(.*)$")" >> $GITHUB_ENV 
-
       - name: kibana image
         run: |
           docker pull kibana:7.17.6 >/dev/null
@@ -68,6 +65,10 @@ jobs:
       - name: Environment setup
         run: |
           brew install jq
+
+      - name: Retrieve last tag of add-on
+        run: |
+          echo "ADD_ON_LAST_TAG=$(gh api https://api.github.com/repos/JanoPL/ddev-kibana/releases/latest | jq '.tag_name')" >> $GITHUB_ENV
 
       - uses: ddev/ddev-add-on-test@v0.6.0
         with:
