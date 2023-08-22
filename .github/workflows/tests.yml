@@ -28,7 +28,7 @@ permissions:
 env:
   GITHUB_REPOSITORY: "janopl/ddev-kibana"
   CACHE_WORKPLACE_KEY: ${{ github.workflow }}-workspace
-  TEST_PATH: "tests"
+  TEST_PATH: .
   KEEP_ALIVE: true
 
 jobs:
