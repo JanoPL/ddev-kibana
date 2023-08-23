@@ -8,7 +8,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+' #semantic version format
 
   schedule:
-    - cron: '01 07 * * *'
+    - cron: '00 20 * * 5'
+    - cron: '00 07 * * *'
 
   workflow_dispatch:
     inputs:
@@ -24,8 +25,16 @@ defaults:
 permissions:
   contents: write
 
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_REPOSITORY: "janopl/ddev-kibana"
+  CACHE_WORKPLACE_KEY: ${{ github.workflow }}-workspace
+  TEST_PATH: .
+  KEEP_ALIVE: true
+
 jobs:
   tests:
+    name: tests
     defaults:
       run:
         shell: bash
@@ -39,56 +48,35 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        submodules: 'true'
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: 'true'
 
-    - name: Set up Homebrew
-      id: set-up-homebrew
-      uses: Homebrew/actions/setup-homebrew@master
+      - name: kibana image
+        run: |
+          docker pull kibana:7.17.6 >/dev/null
 
-    - name: Environment setup
-      run: |
-        brew install bats-core mkcert jq
-        mkcert -install
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
-    - name: Use ddev stable
-      if: matrix.ddev_version == 'stable'
-      run: brew install ddev/ddev/ddev
+      - name: Environment setup
+        run: |
+          brew install jq
 
-    - name: Use ddev edge
-      if: matrix.ddev_version == 'edge'
-      run: brew install ddev/ddev-edge/ddev
+      - name: Retrieve last tag of add-on
+        run: |
+          echo "ADD_ON_LAST_TAG=$(gh api https://api.github.com/repos/JanoPL/ddev-kibana/releases/latest | jq '.tag_name')" >> $GITHUB_ENV
 
-    - name: Use ddev HEAD
-      if: matrix.ddev_version == 'HEAD'
-      run: brew install --HEAD ddev/ddev/ddev
-
-    - name: Use ddev PR
-      if: matrix.ddev_version == 'PR'
-      run: |
-        curl -sSL -o ddev_linux.zip ${NIGHTLY_DDEV_PR_URL}
-        unzip ddev_linux.zip
-        mv ddev /usr/local/bin/ddev && chmod +x /usr/local/bin/ddev
-
-    - name: Download docker images
-      run: | 
-        mkdir junk && pushd junk && ddev config --auto && ddev debug download-images >/dev/null
-        docker pull kibana:7.17.6 >/dev/null
-
-    - name: tmate debugging session
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: true
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.debug_enabled }}
-
-    - name: tests
-      run: bats tests
-
-    # keepalive-workflow adds a dummy commit if there's no other action here, keeps
-    # GitHub from turning off tests after 60 days
-    - uses: gautamkrishnar/keepalive-workflow@v1
-      if: matrix.ddev_version == 'stable'
-
-
+      - uses: ddev/ddev-add-on-test@v0.6.0
+        with:
+          ddev_version: ${{ matrix.ddev_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          debug_enabled: ${{ github.event.inputs.debug_enabled }}
+          addon_repository: ${{ env.GITHUB_REPOSITORY }}
+          addon_ref: ${{ env.ADD_ON_LAST_TAG }}
+          addon_path: ${{ env.TEST_PATH }}
+          keepalive: ${{ env.KEEP_ALIVE }}
+          disable_checkout_action: true
