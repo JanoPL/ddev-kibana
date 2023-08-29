@@ -1,15 +1,31 @@
 name: ddev-kibana
 
-pre_install_actions:
-
 project_files:
   - docker-compose.kibana.yaml
+  - ./kibana/config.yml
 
 dependencies:
   - elasticsearch
 
 global_files:
 
-post_install_actions:
+pre_install_actions:
 
+post_install_actions:
+  - |
+    #ddev-no-display
+    if [ -f ./kibana/config.yml ] && ! grep '#ddev-generated' ./kibana/config.yml; then
+        echo "Existing ./kibana/config.yml does not have #ddev-generated, so can't be updated"
+        exit 2
+    fi
+    
+    baseUrl=${DDEV_PRIMARY_URL}
+    echo "Copy to ./kibana/config.yml server.publicBaseUrl: $baseUrl"
+    
+    echo "server.publicBaseUrl: \"$baseUrl\"" >> ./kibana/config.yml
+    echo "server.host: \"0.0.0.0\"" >> ./kibana/config.yml
+    echo "elasticsearch.hosts: [\"http://elasticsearch:9200\"]" >> ./kibana/config.yml
+    echo "monitoring.ui.container.elasticsearch.enabled: true" >> ./kibana/config.yml
+    
 yaml_read_files:
+

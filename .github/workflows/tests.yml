@@ -28,9 +28,8 @@ permissions:
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: "janopl/ddev-kibana"
-  CACHE_WORKPLACE_KEY: ${{ github.workflow }}-workspace
   TEST_PATH: .
-  KEEP_ALIVE: true
+  KEEP_ALIVE: false
 
 jobs:
   tests:
@@ -48,12 +47,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-
       - name: kibana image
         run: |
           docker pull kibana:7.17.6 >/dev/null
@@ -66,11 +59,11 @@ jobs:
         run: |
           brew install jq
 
-      - name: Retrieve last tag of add-on
-        run: |
-          echo "ADD_ON_LAST_TAG=$(gh api https://api.github.com/repos/JanoPL/ddev-kibana/releases/latest | jq '.tag_name')" >> $GITHUB_ENV
+      # - name: Retrieve last tag of add-on
+      #   run: |
+      #     echo "ADD_ON_LAST_TAG=$(gh api https://api.github.com/repos/JanoPL/ddev-kibana/releases/latest | jq '.tag_name')" >> $GITHUB_ENV
 
-      - uses: ddev/ddev-add-on-test@v0.6.0
+      - uses: ddev/ddev-add-on-test@v1
         with:
           ddev_version: ${{ matrix.ddev_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -79,4 +72,4 @@ jobs:
           addon_ref: ${{ env.ADD_ON_LAST_TAG }}
           addon_path: ${{ env.TEST_PATH }}
           keepalive: ${{ env.KEEP_ALIVE }}
-          disable_checkout_action: true
+          disable_checkout_action: false

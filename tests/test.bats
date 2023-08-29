@@ -1,7 +1,8 @@
 setup() {
     set -u -o pipefail
-    load 'test_helper/bats-support/load'
-    load 'test_helper/bats-assert/load'
+    TEST_BREW_PREFIX="$(brew --prefix)"
+    load "${TEST_BREW_PREFIX}/lib/bats-support/load.bash"
+    load "${TEST_BREW_PREFIX}/lib/bats-assert/load.bash"
 
     export DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )/.."
     export TESTDIR=~/tmp/testddevkibana
@@ -19,6 +20,14 @@ teardown() {
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
     ddev delete -Oy ${PROJNAME} >/dev/null 2>&1
     [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
+}
+
+@test "check config file included in install.yaml" {
+    set -eu -o pipefail
+
+    output=$(yq -r '.project_files[1]' < ${DIR}/install.yaml)
+
+    assert_output "./kibana/config.yml"
 }
 
 @test "install from directory" {

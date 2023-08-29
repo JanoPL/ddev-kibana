@@ -14,9 +14,10 @@ services:
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT
+    volumes:
+      - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearch
-
     healthcheck:
       test: [ "CMD-SHELL", "curl --fail -s localhost:5601" ]
       interval: 60s
