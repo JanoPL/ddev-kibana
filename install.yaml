@@ -1,7 +1,5 @@
 name: ddev-kibana
 
-pre_install_actions:
-
 project_files:
   - docker-compose.kibana.yaml
   - ./kibana/config.yml
@@ -10,6 +8,8 @@ dependencies:
   - elasticsearch
 
 global_files:
+
+pre_install_actions:
 
 post_install_actions:
   - |
@@ -22,6 +22,10 @@ post_install_actions:
     baseUrl=${DDEV_PRIMARY_URL}
     echo "Copy to ./kibana/config.yml server.publicBaseUrl: $baseUrl"
     
-    sed -e "s/publicUrl/$baseUrl/g" ./kibana/config.yml
+    echo "server.publicBaseUrl: \"$baseUrl\"" >> ./kibana/config.yml
+    echo "server.host: \"0.0.0.0\"" >> ./kibana/config.yml
+    echo "elasticsearch.hosts: [\"http://elasticsearch:9200\"]" >> ./kibana/config.yml
+    echo "monitoring.ui.container.elasticsearch.enabled: true" >> ./kibana/config.yml
+    
 yaml_read_files:
 

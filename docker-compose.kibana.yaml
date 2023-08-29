@@ -7,7 +7,7 @@ services:
     expose:
       - "5601"
     environment:
-      ELASTICSEARCH_HOSTS: '["http://ddev-${DDEV_SITENAME}-elasticsearch:9200", "https://ddev-${DDEV_SITENAME}-elasticsearch:9200"]'
+      ELASTICSEARCH_HOSTS: '["http://ddev-${DDEV_SITENAME}-elasticsearch:9200"]'
       VIRTUAL_HOST: $DDEV_HOSTNAME
       HTTP_EXPOSE: 5600:5601
       HTTPS_EXPOSE: 5601:5601
@@ -18,7 +18,6 @@ services:
       - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearch
-
     healthcheck:
       test: [ "CMD-SHELL", "curl --fail -s localhost:5601" ]
       interval: 60s
