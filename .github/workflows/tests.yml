@@ -28,7 +28,7 @@ permissions:
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: "janopl/ddev-kibana"
-  ADD_ON_LAST_TAG: "v1.4.0"
+  ADD_ON_LAST_TAG: v1.4.0
   TEST_PATH: .
   KEEP_ALIVE: false
 
@@ -48,6 +48,14 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.GITHUB_REPOSITORY }}
+          ref: ${{ env.ADD_ON_LAST_TAG }}
+          path: ${{ env.TEST_PATH }}
+          submodules: 'true'
+
       - name: kibana image
         run: |
           docker pull kibana:7.17.6 >/dev/null
@@ -73,4 +81,4 @@ jobs:
           addon_ref: ${{ env.ADD_ON_LAST_TAG }}
           addon_path: ${{ env.TEST_PATH }}
           keepalive: ${{ env.KEEP_ALIVE }}
-          disable_checkout_action: false
+          disable_checkout_action: true
