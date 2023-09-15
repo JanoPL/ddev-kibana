@@ -29,7 +29,7 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_REPOSITORY: "janopl/ddev-kibana"
   ADD_ON_LAST_TAG: v1.4.0
-  TEST_PATH: .
+  TEST_PATH: test-addon
   KEEP_ALIVE: false
 
 jobs:
