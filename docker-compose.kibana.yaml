@@ -17,7 +17,8 @@ services:
     volumes:
       - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD-SHELL", "curl --fail -s localhost:5601" ]
       interval: 60s
