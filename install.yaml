@@ -3,6 +3,8 @@ name: ddev-kibana
 project_files:
   - docker-compose.kibana.yaml
   - ./kibana/config.yml
+  - ./kibana/Dockerfile
+  - ./kibana/healthcheck.sh
 
 dependencies:
   - elasticsearch
