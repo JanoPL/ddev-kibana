@@ -3,7 +3,9 @@ services:
   kibana:
     container_name: ddev-${DDEV_SITENAME}-kibana
     hostname: ${DDEV_SITENAME}-kibana
-    image: kibana:7.17.6
+    build:
+      context: ./kibana
+      dockerfile: Dockerfile
     expose:
       - "5601"
     environment:
@@ -17,9 +19,10 @@ services:
     volumes:
       - ./kibana/config.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     healthcheck:
-      test: [ "CMD-SHELL", "curl --fail -s localhost:5601" ]
+      test: [ "CMD-SHELL", "/tmp/healthcheck.sh" ]
       interval: 60s
       timeout: 30s
       retries: 3
