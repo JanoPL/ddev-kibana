@@ -1,5 +1,8 @@
 #ddev-generated
-FROM kibana:7.17.6
+
+ARG KIBANA_VERSION
+
+FROM kibana:$KIBANA_VERSION
 
 USER root
 
