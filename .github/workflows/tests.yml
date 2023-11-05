@@ -50,6 +50,7 @@ jobs:
       - name: kibana image
         run: |
           docker pull kibana:7.17.6 >/dev/null
+          docker pull kibana:8.10.2 >/dev/null
 
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -57,7 +58,7 @@ jobs:
 
       - name: Environment setup
         run: |
-          brew install jq
+          brew install jq yq
 
       # - name: Retrieve last tag of add-on
       #   run: |
