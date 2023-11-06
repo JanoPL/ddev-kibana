@@ -10,6 +10,22 @@ Uses [Kibana official image](https://registry.hub.docker.com/_/kibana)
 
 From within the container, the kibana container is reached at hostname "kibana", port: 5601
 
+### Kibana Version 
+To adjust the version of your elastic search, you can use the new argument variable that docker compose provides for the version.
+
+```docker-compose.kibana.yml```
+```
+services:
+    kibana:
+        build:
+            ...
+            args:
+                - KIBANA_VERSION=7.17.6 // example: 8.10.2
+        ...
+        environment:
+            KIBANA_VERSION: 7.17.6 // example: 8.10.2
+```
+
 ### Configuration file
 You can configure Kibana dashboard through the config file under: ```.ddev/kibana/config.yml```
 
