@@ -22,6 +22,7 @@ jobs:
           bump_version_scheme: minor
           tag_prefix: v
           use_github_release_notes: true
+          dry_run: ${{ github.event.inputs.tag_name }}
 
       - name: Check Output Parameters
         run: |
