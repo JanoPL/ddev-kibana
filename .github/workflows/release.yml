@@ -9,6 +9,18 @@ on:
         description: Dry run
         type: boolean
         default: false
+      version_scheme:
+        description: Scheme version
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: minor
+      release_notes:
+        description: Release Notes
+        type: boolean
+        default: true
 
 jobs:
   release-on-push:
@@ -19,10 +31,10 @@ jobs:
       - id: release
         uses: rymndhng/release-on-push-action@master
         with:
-          bump_version_scheme: minor
+          bump_version_scheme: ${{ github.event.inputs.version_scheme }}
           tag_prefix: v
-          use_github_release_notes: true
-          dry_run: ${{ github.event.inputs.tag_name }}
+          use_github_release_notes: ${{ github.event.inputs.release_notes }}
+          dry_run: ${{ github.event.inputs.dry_run }}
 
       - name: Check Output Parameters
         run: |
