@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: kibana image
         run: |
-          docker pull kibana:7.17.6 >/dev/null
+          docker pull kibana:7.17.14 >/dev/null
           docker pull kibana:8.10.2 >/dev/null
 
       - name: Set up Homebrew
