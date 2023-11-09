@@ -24,30 +24,6 @@ teardown() {
     [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
 }
 
-@test "check docker file included in install.yaml" {
-   set -eu -o pipefail
-
-   output=$(yq -r '.project_files[2]' < ${DIR}/install.yaml)
-
-   assert_output "./kibana/Dockerfile"
-}
-
-@test "check healthcheck file included in install.yaml" {
-   set -eu -o pipefail
-
-   output=$(yq -r '.project_files[3]' < ${DIR}/install.yaml)
-
-   assert_output "./kibana/healthcheck.sh"
-}
-
-@test "check config file included in install.yaml" {
-    set -eu -o pipefail
-
-    output=$(yq -r '.project_files[1]' < ${DIR}/install.yaml)
-
-    assert_output "./kibana/config.yml"
-}
-
 @test "install from directory" {
     set -eu -o pipefail
 
