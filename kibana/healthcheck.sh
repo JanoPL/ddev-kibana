@@ -11,9 +11,9 @@
 function checkGreenStatus
 {
     if [ "$status" == "green" ]; then
-        printf "%s is green \n" "$1"
+        printf "%s is green \n" "$1";
     else
-        printf "%s is not green, status is %2\n" "$1" "$status"
+        printf "%s is not green, status is %2\n" "$1" "$status";
         exit 1;
     fi
 }
@@ -28,9 +28,9 @@ function checkGreenStatus
 function checkAvailableStatus
 {
   if [ "$status" == "available" ]; then
-        printf "%s is available \n" "$1"
+        printf "%s is available \n" "$1";
     else
-        printf "%s is not available, status is %2\n" "$1" "$status"
+        printf "%s is not available, status is %2\n" "$1" "$status";
         exit 1;
     fi
 }
@@ -44,7 +44,34 @@ function checkAvailableStatus
 #######################################
 function setStatusFromAddress
 {
-  status=$(curl -s --location "$1" --header 'Content-Type: application/json' | jq --raw-output "$2")
+  status=$(curl -s --location "$1" --header 'Content-Type: application/json' | jq --raw-output "$2");
+}
+
+#######################################
+# Check version of elastic search
+# Arguments:
+#   -
+# Returns:
+#   void
+#######################################
+function checkVersion
+{
+  case ${KIBANA_VERSION} in
+    7.*|8.0.0)
+      setStatusFromAddress "http://elasticsearch:9200/_cluster/health" ".status";
+      checkGreenStatus "elastic";
+
+      setStatusFromAddress "http://kibana:5601/api/status" ".status.overall.state";
+      checkGreenStatus 'kibana';
+      ;;
+    8.*|9.0.0)
+      setStatusFromAddress "http://elasticsearch:9200/_cluster/health" ".status";
+      checkGreenStatus "elastic";
+
+      setStatusFromAddress "http://kibana:5601/api/status" ".status.overall.level";
+      checkAvailableStatus 'available';
+      ;;
+  esac
 }
 
 #######################################
@@ -52,23 +79,7 @@ function setStatusFromAddress
 #######################################
 if command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1
   then
-    if [[ ${KIBANA_VERSION} -ge 7.0.0 && ${KIBANA_VERSION} -le 8.0.0 ]]
-      then
-        setStatusFromAddress "http://elasticsearch:9200/_cluster/health" ".status"
-        checkGreenStatus "elastic";
-
-        setStatusFromAddress "http://kibana:5601/api/status" ".status.overall.state"
-        checkGreenStatus 'kibana'
-    fi
-
-    if [[ ${KIBANA_VERSION} -ge 8.0.0 && ${KIBANA_VERSION} -le 9.0.0 ]]
-      then
-        setStatusFromAddress "http://elasticsearch:9200/_cluster/health" ".status"
-        checkGreenStatus "elastic";
-
-        setStatusFromAddress "http://kibana:5601/api/status" ".status.overall.level"
-        checkAvailableStatus 'available'
-    fi
+    checkVersion;
 
     exit 0;
 else
