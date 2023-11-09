@@ -8,7 +8,7 @@
 # Returns:
 #   0 if thing was correct status, non-zero on error.
 #######################################
-function checkGreenStatus
+checkGreenStatus()
 {
     if [ "$status" == "green" ]; then
         printf "%s is green \n" "$1";
@@ -25,7 +25,7 @@ function checkGreenStatus
 # Returns:
 #   0 if thing was correct status, non-zero on error.
 #######################################
-function checkAvailableStatus
+checkAvailableStatus()
 {
   if [ "$status" == "available" ]; then
         printf "%s is available \n" "$1";
@@ -42,7 +42,7 @@ function checkAvailableStatus
 # Returns:
 #   non-zero on error.
 #######################################
-function setStatusFromAddress
+setStatusFromAddress()
 {
   status=$(curl -s --location "$1" --header 'Content-Type: application/json' | jq --raw-output "$2");
 }
@@ -54,7 +54,7 @@ function setStatusFromAddress
 # Returns:
 #   void
 #######################################
-function checkVersion
+checkVersion()
 {
   case ${KIBANA_VERSION} in
     7.*|8.0.0)
