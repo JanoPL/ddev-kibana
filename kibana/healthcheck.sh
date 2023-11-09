@@ -1,16 +1,16 @@
-#!/usr/bin/env bash
+#!/usr/bin/sh
 #ddev-generated
 
 #######################################
-# Check green status 
+# Check green status
 # Arguments:
 #   status name
 # Returns:
 #   0 if thing was correct status, non-zero on error.
 #######################################
-function checkGreenStatus
+checkGreenStatus()
 {
-    if [ "$status" == "green" ]; then
+    if [ "$status" = "green" ]; then
         printf "%s is green \n" "$1";
     else
         printf "%s is not green, status is %2\n" "$1" "$status";
@@ -19,18 +19,18 @@ function checkGreenStatus
 }
 
 #######################################
-# Check available status 
+# Check available status
 # Arguments:
 #   status name
 # Returns:
 #   0 if thing was correct status, non-zero on error.
 #######################################
-function checkAvailableStatus
+checkAvailableStatus()
 {
-  if [ "$status" == "available" ]; then
-        printf "%s is available \n" "$1";
+  if [ "$status" = "available" ]; then
+        printf "All plugins are %s \n" "$1";
     else
-        printf "%s is not available, status is %2\n" "$1" "$status";
+        printf "%s is not available, status is %2 \n" "$1" "$status";
         exit 1;
     fi
 }
@@ -42,7 +42,7 @@ function checkAvailableStatus
 # Returns:
 #   non-zero on error.
 #######################################
-function setStatusFromAddress
+setStatusFromAddress()
 {
   status=$(curl -s --location "$1" --header 'Content-Type: application/json' | jq --raw-output "$2");
 }
@@ -54,7 +54,7 @@ function setStatusFromAddress
 # Returns:
 #   void
 #######################################
-function checkVersion
+checkVersion()
 {
   case ${KIBANA_VERSION} in
     7.*|8.0.0)
@@ -77,12 +77,17 @@ function checkVersion
 #######################################
 # Main
 #######################################
+printf "HealthCheck \n" 3>&1;
+
 if command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1
   then
+    printf "Check Status for kibana: \n" 3>&1;
     checkVersion;
 
     exit 0;
 else
-    echo "Not found curl and/or jq";
+    printf "Not found curl and/or jq \n" 3>&1;
     exit 1;
 fi
+
+exit 0;
