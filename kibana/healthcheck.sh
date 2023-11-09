@@ -2,7 +2,7 @@
 #ddev-generated
 
 #######################################
-# Check green status 
+# Check green status
 # Arguments:
 #   status name
 # Returns:
@@ -10,7 +10,7 @@
 #######################################
 checkGreenStatus()
 {
-    if [ "$status" == "green" ]; then
+    if [ "$status" = "green" ]; then
         printf "%s is green \n" "$1";
     else
         printf "%s is not green, status is %2\n" "$1" "$status";
@@ -19,7 +19,7 @@ checkGreenStatus()
 }
 
 #######################################
-# Check available status 
+# Check available status
 # Arguments:
 #   status name
 # Returns:
@@ -27,10 +27,10 @@ checkGreenStatus()
 #######################################
 checkAvailableStatus()
 {
-  if [ "$status" == "available" ]; then
-        printf "%s is available \n" "$1";
+  if [ "$status" = "available" ]; then
+        printf "All plugins are %s \n" "$1";
     else
-        printf "%s is not available, status is %2\n" "$1" "$status";
+        printf "%s is not available, status is %2 \n" "$1" "$status";
         exit 1;
     fi
 }
@@ -77,12 +77,17 @@ checkVersion()
 #######################################
 # Main
 #######################################
+printf "HealthCheck \n" 3>&1;
+
 if command -v curl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1
   then
+    printf "Check Status for kibana: \n" 3>&1;
     checkVersion;
 
     exit 0;
 else
-    echo "Not found curl and/or jq";
+    printf "Not found curl and/or jq \n" 3>&1;
     exit 1;
 fi
+
+exit 0;
