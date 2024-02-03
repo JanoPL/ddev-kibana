@@ -38,12 +38,13 @@ You can access the Kibana server directly from the host by visiting:
 
 ## Contribution
 
-If you want to contribute to this project, you need to follow these steps:
+First off, thanks for taking the time to contribute! Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
 
-1. Fork this repository on GitHub.
-2. Clone your forked repository to your local machine.
-3. Add the original repository as a remote called `upstream`.
-4. Create a new branch for your feature or bugfix.
-6. Make your changes and commit them to your branch.
-7. Push your branch to your forked repository on GitHub.
-8. Create a pull request from your branch to the `main` branch of the original repository.
+
+Please read [our contribution guidelines](./docs/CONTRIBUTING.md), and thank you for being involved!
+
+## License
+
+This project is licensed under the **APACHE license**.
+
+See [LICENSE](LICENSE) for more information.
