@@ -42,4 +42,4 @@ Please try to create bug reports that are:
 3. Create your feature branch (`git checkout -b feat/amazing_feature`)
 4. Commit your changes (`git commit -m 'feat: add amazing_feature'`) JanoPL\ddev-kibana uses [conventional commits](https://www.conventionalcommits.org), so please follow the specification in your commit messages.
 5. Push to the branch (`git push origin feat/amazing_feature`)
-6. [Open a Pull Request](https://github.com/janopl/janopl\ddev-kibana/compare?expand=1)
+6. [Open a Pull Request](https://github.com/janopl/ddev-kibana/compare?expand=1)
