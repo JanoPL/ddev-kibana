@@ -33,7 +33,9 @@ teardown() {
     ddev get ddev/ddev-elasticsearch
     ddev get ${DIR}
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.state'")
     assert_output "green"
@@ -59,7 +61,9 @@ teardown() {
     ddev get ddev/ddev-elasticsearch
     ddev get JanoPL/ddev-kibana
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.state'")
     assert_output "green"
@@ -80,7 +84,9 @@ teardown() {
     yq -e -i '.services.kibana.environment.KIBANA_VERSION = "8.10.2"' ./.ddev/docker-compose.kibana.yaml
 
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.version.number'")
     assert_output "8.10.2"
@@ -102,7 +108,9 @@ teardown() {
     cp .ddev/kibana/docker-compose.kibana8.yaml .ddev/
 
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.version.number'")
     assert_output "8.10.2"
