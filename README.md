@@ -20,10 +20,10 @@ services:
         build:
             ...
             args:
-                - KIBANA_VERSION=7.17.6 // example: 8.10.2
+                - KIBANA_VERSION=7.17.14 // example: 8.10.2
         ...
         environment:
-            KIBANA_VERSION: 7.17.6 // example: 8.10.2
+            KIBANA_VERSION: 7.17.14 // example: 8.10.2
 ```
 
 ### Configuration file
