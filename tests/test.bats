@@ -88,3 +88,25 @@ teardown() {
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.level'")
     assert_output "available"
 }
+
+@test "install different version of kibana from directory by copy docker compose file" {
+    set -eu -o pipefail
+
+    cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
+    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+
+    ddev get ddev/ddev-elasticsearch
+    cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/
+
+    ddev get ${DIR}
+    cp .ddev/kibana/docker-compose.kibana8.yaml .ddev/
+
+    ddev restart >/dev/null 2>&1
+    ddev logs -s kibana >&3
+
+    output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.version.number'")
+    assert_output "8.10.2"
+
+    output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.level'")
+    assert_output "available"
+}

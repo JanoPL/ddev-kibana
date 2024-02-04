@@ -26,6 +26,10 @@ services:
             KIBANA_VERSION: 7.17.6 // example: 8.10.2
 ```
 
+OR 
+
+Post ddev get, run ```cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/``` to enable Kibana 8.
+
 ### Configuration file
 You can configure Kibana dashboard through the config file under: ```.ddev/kibana/config.yml```
 
