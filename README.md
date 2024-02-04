@@ -1,4 +1,4 @@
-[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2023.svg)
+[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2024.svg)
 
 ## Instalation
 
@@ -20,10 +20,10 @@ services:
         build:
             ...
             args:
-                - KIBANA_VERSION=7.17.6 // example: 8.10.2
+                - KIBANA_VERSION=7.17.14 // example: 8.10.2
         ...
         environment:
-            KIBANA_VERSION: 7.17.6 // example: 8.10.2
+            KIBANA_VERSION: 7.17.14 // example: 8.10.2
 ```
 
 OR 
