@@ -33,7 +33,9 @@ teardown() {
     ddev get ddev/ddev-elasticsearch
     ddev get ${DIR}
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.state'")
     assert_output "green"
@@ -59,7 +61,9 @@ teardown() {
     ddev get ddev/ddev-elasticsearch
     ddev get JanoPL/ddev-kibana
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.state'")
     assert_output "green"
@@ -80,7 +84,33 @@ teardown() {
     yq -e -i '.services.kibana.environment.KIBANA_VERSION = "8.10.2"' ./.ddev/docker-compose.kibana.yaml
 
     ddev restart >/dev/null 2>&1
-    ddev logs -s kibana >&3
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
+
+    output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.version.number'")
+    assert_output "8.10.2"
+
+    output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.status.overall.level'")
+    assert_output "available"
+}
+
+@test "install different version of kibana from directory by copy docker compose file" {
+    set -eu -o pipefail
+
+    cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
+    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+
+    ddev get ddev/ddev-elasticsearch
+    cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/
+
+    ddev get ${DIR}
+    cp .ddev/kibana/docker-compose.kibana8.yaml .ddev/
+
+    ddev restart >/dev/null 2>&1
+
+    # DDEV logs
+    #ddev logs -s kibana >&3
 
     output=$(ddev exec "curl -s --location 'kibana:5601/api/status' --header 'Content-Type: application/json' | jq --raw-output '.version.number'")
     assert_output "8.10.2"

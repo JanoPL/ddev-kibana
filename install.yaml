@@ -5,6 +5,7 @@ project_files:
   - ./kibana/config.yml
   - ./kibana/Dockerfile
   - ./kibana/healthcheck.sh
+  - ./kibana/docker-compose.kibana8.yaml
 
 dependencies:
   - elasticsearch
