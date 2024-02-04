@@ -11,15 +11,12 @@ setup() {
     mkdir -p $TESTDIR
     export PROJNAME=testddevkibana
     export DDEV_NON_INTERACTIVE=true
-    ddev delete -Oy ${PROJNAME} >/dev/null 2>&1 || true
     cd "${TESTDIR}"
-    ddev config --project-name=${PROJNAME}
 }
 
 teardown() {
     set -eu -o pipefail
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    ddev delete -Oy ${PROJNAME} >/dev/null 2>&1
     [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
 }
 
