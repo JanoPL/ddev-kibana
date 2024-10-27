@@ -4,7 +4,17 @@
 
 Uses [Kibana official image](https://registry.hub.docker.com/_/kibana)
 
-`ddev get janopl/ddev-kibana`
+For DDEV v1.23.5 or above run
+
+```sh
+ddev add-on get janopl/ddev-kibana
+```
+
+For earlier versions of DDEV run
+
+```sh
+ddev get janopl/ddev-kibana
+```
 
 ## Configuration
 
@@ -28,7 +38,7 @@ services:
 
 OR 
 
-Post ddev get, run ```cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/``` to enable Kibana 8.
+After adding the add-on, run ```cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/``` to enable Kibana 8.
 
 ### Configuration file
 You can configure Kibana dashboard through the config file under: ```.ddev/kibana/config.yml```
