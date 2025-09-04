@@ -8,7 +8,7 @@ project_files:
   - ./kibana/docker-compose.kibana8.yaml
 
 dependencies:
-  - elasticsearch
+  - ddev/ddev-elasticsearch
 
 global_files:
 
