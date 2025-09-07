@@ -28,10 +28,10 @@ teardown() {
     set -eu -o pipefail
 
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+    echo "# ddev add-on get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
 
-    ddev get ddev/ddev-elasticsearch
-    ddev get ${DIR}
+    ddev add-on get ddev/ddev-elasticsearch
+    ddev add-on get ${DIR}
     ddev restart >/dev/null 2>&1
 
     # DDEV logs
@@ -45,10 +45,10 @@ teardown() {
     set -eu -o pipefail
 
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+    echo "# ddev add-on get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
 
-    ddev get ddev/ddev-adminer
-    run ddev get ${DIR}
+    ddev add-on get ddev/ddev-adminer
+    run ddev add-on get ${DIR}
     run assert_failure
 }
 
@@ -56,10 +56,10 @@ teardown() {
     set -eu -o pipefail
 
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    echo "# ddev get JanoPL/ddev-kibana with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+    echo "# ddev add-on get JanoPL/ddev-kibana with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
 
-    ddev get ddev/ddev-elasticsearch
-    ddev get JanoPL/ddev-kibana
+    ddev add-on get ddev/ddev-elasticsearch
+    ddev add-on get JanoPL/ddev-kibana
     ddev restart >/dev/null 2>&1
 
     # DDEV logs
@@ -73,11 +73,11 @@ teardown() {
     set -eu -o pipefail
 
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+    echo "# ddev add-on get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
 
-    ddev get ddev/ddev-elasticsearch
+    ddev add-on get ddev/ddev-elasticsearch
     cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/
-    ddev get ${DIR}
+    ddev add-on get ${DIR}
 
     yq --version >&3
     yq -e -i '.services.kibana.build.args[0] = "KIBANA_VERSION=8.10.2"' ./.ddev/docker-compose.kibana.yaml
@@ -99,12 +99,12 @@ teardown() {
     set -eu -o pipefail
 
     cd ${TESTDIR} || ( printf "unable to cd to ${TESTDIR}\n" && exit 1 )
-    echo "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+    echo "# ddev add-on get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
 
-    ddev get ddev/ddev-elasticsearch
+    ddev add-on get ddev/ddev-elasticsearch
     cp .ddev/elasticsearch/docker-compose.elasticsearch8.yaml .ddev/
 
-    ddev get ${DIR}
+    ddev add-on get ${DIR}
     cp .ddev/kibana/docker-compose.kibana8.yaml .ddev/
 
     ddev restart >/dev/null 2>&1
