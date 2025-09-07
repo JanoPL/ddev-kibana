@@ -6,6 +6,11 @@ project_files:
   - ./kibana/Dockerfile
   - ./kibana/healthcheck.sh
   - ./kibana/docker-compose.kibana8.yaml
+  - ./kibana/config-manager.sh
+  - ./kibana/templates/config.development.yml
+  - ./kibana/templates/config.production.yml
+  - ./kibana/templates/config.testing.yml
+  - ./kibana/validation/validation-schema.yml
 
 dependencies:
   - ddev/ddev-elasticsearch
@@ -13,22 +18,54 @@ dependencies:
 global_files:
 
 pre_install_actions:
+  - |
+    #ddev-no-display
+    echo "Setting up Kibana configuration management..."
+    mkdir -p .ddev/kibana/{templates,backups,validation}
 
 post_install_actions:
   - |
-    #ddev-no-display
-    if [ -f ./kibana/config.yml ] && ! grep '#ddev-generated' ./kibana/config.yml; then
-        echo "Existing ./kibana/config.yml does not have #ddev-generated, so can't be updated"
-        exit 2
-    fi
-    
-    baseUrl=${DDEV_PRIMARY_URL}
-    echo "Copy to ./kibana/config.yml server.publicBaseUrl: $baseUrl"
-    
-    echo "server.publicBaseUrl: \"$baseUrl\"" >> ./kibana/config.yml
-    echo "server.host: \"0.0.0.0\"" >> ./kibana/config.yml
-    echo "elasticsearch.hosts: [\"http://elasticsearch:9200\"]" >> ./kibana/config.yml
-    echo "monitoring.ui.container.elasticsearch.enabled: true" >> ./kibana/config.yml
-    
-yaml_read_files:
+    # Detect environment (default to development)
+    ENVIRONMENT=${DDEV_KIBANA_ENV:-development}
 
+    # Check if existing config should be preserved
+    if [ -f ./kibana/config.yml ] && ! grep '#ddev-generated' .ddev/kibana/config.yml >/dev/null 2>&1; then
+        echo "Existing custom configuration detected!"
+        echo "   Your current config.yml will be backed up before generating new configuration."
+        echo "   To restore it later, run: ddev exec .ddev/kibana/config-manager.sh restore"
+    fi
+
+    # Make config manager executable
+    if [ -f ./kibana/config-manager.sh ]; then
+      chmod +x ./kibana/config-manager.sh;
+    else
+      echo "file not existed";
+    fi
+
+    if [ -f ./kibana/detect-environment.sh ]; then
+      chmod +x ./kibana/detect-environment.sh;
+    else
+      echo "file not existed";
+    fi
+
+    # Generate configuration using the config manager
+    cd ./kibana && ./config-manager.sh generate "$ENVIRONMENT"
+
+    # Validate the generated configuration
+    if ./config-manager.sh validate; then
+        echo "Kibana configuration generated and validated successfully!"
+        echo ""
+        echo "Configuration Management Commands:"
+        echo "  ddev exec .ddev/kibana/config-manager.sh wizard    # Interactive setup"
+        echo "  ddev exec .ddev/kibana/config-manager.sh validate  # Validate config"
+        echo "  ddev exec .ddev/kibana/config-manager.sh backup    # Backup config"
+        echo "  ddev exec .ddev/kibana/config-manager.sh help      # Show all commands"
+        echo ""
+        echo "Environment: $ENVIRONMENT"
+        echo "Access Kibana at: ${DDEV_PRIMARY_URL}:5601"
+    else
+        echo "Configuration validation failed. Please check the logs."
+        exit 1
+    fi
+
+yaml_read_files:

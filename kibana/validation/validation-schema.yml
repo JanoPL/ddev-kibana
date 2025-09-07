@@ -1,0 +1,55 @@
+#ddev-generated
+# Kibana Configuration Validation Schema
+# Defines required and optional configuration parameters
+
+required_fields:
+  - server.host
+  - server.port
+  - elasticsearch.hosts
+
+optional_fields:
+  - server.name
+  - server.publicBaseUrl
+  - server.basePath
+  - elasticsearch.requestTimeout
+  - elasticsearch.shardTimeout
+  - logging.level
+  - monitoring.ui.container.elasticsearch.enabled
+
+security_fields:
+  - xpack.encryptedSavedObjects.encryptionKey
+  - xpack.security.encryptionKey
+  - xpack.reporting.encryptionKey
+
+validation_rules:
+  server.port:
+    type: integer
+    min: 1
+    max: 65535
+  elasticsearch.requestTimeout:
+    type: integer
+    min: 1000
+    max: 300000
+  logging.level:
+    type: string
+    allowed_values: ["fatal", "error", "warn", "info", "debug", "trace", "silent"]
+  encryption_keys:
+    min_length: 32
+    max_length: 32
+
+environment_specific:
+  development:
+    recommended:
+      - logging.level: debug
+      - telemetry.enabled: false
+  production:
+    required:
+      - xpack.encryptedSavedObjects.encryptionKey
+      - xpack.security.encryptionKey
+    recommended:
+      - logging.level: warn
+      - telemetry.enabled: false
+  testing:
+    recommended:
+      - logging.quiet: true
+      - monitoring.kibana.collection.enabled: false
