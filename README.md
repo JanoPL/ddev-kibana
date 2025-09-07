@@ -1,4 +1,9 @@
-[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2024.svg)
+# DDEV Kibana Add-on
+
+[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2025.svg)
+
+Install and configure Kibana in your DDEV environment. This add-on provides a seamless integration with Elasticsearch
+for data visualization and analytics.
 
 ## Instalation
 
@@ -16,12 +21,25 @@ For earlier versions of DDEV run
 ddev get janopl/ddev-kibana
 ```
 
+## Features
+
+- Easy integration with DDEV environment
+- Support for multiple Kibana versions
+- Custom configuration options
+- Secure HTTPS access
+- Health monitoring
+
 ## Configuration
 
-From within the container, the kibana container is reached at hostname "kibana", port: 5601
+### Default Settings
 
-### Kibana Version 
-To adjust the version of your elastic search, you can use the new argument variable that docker compose provides for the version.
+- Container hostname: "kibana"
+- Default port: 5601
+- Automatic health checks enabled
+
+### Version Configuration
+
+You can customize the Kibana version to match your Elasticsearch installation.
 
 ```docker-compose.kibana.yml```
 ```
@@ -43,12 +61,21 @@ After adding the add-on, run ```cp .ddev/elasticsearch/docker-compose.elasticsea
 ### Configuration file
 You can configure Kibana dashboard through the config file under: ```.ddev/kibana/config.yml```
 
-## Connection
+## Access and Usage
 
-You can access the Kibana server directly from the host by visiting:
+Access the Kibana dashboard through your browser:
 
-- `https://<projectname>.ddev.site:5601`
-- `http://<projectname>.ddev.site:5600`
+- HTTPS: `https://<projectname>.ddev.site:5601` (Recommended)
+- HTTP: `http://<projectname>.ddev.site:5600`
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. If Kibana fails to start, ensure Elasticsearch is running and healthy
+2. Check the logs using `ddev logs -s kibana`
+3. Verify the version compatibility between Kibana and Elasticsearch
+4. Ensure the configuration file is properly formatted
 
 ## Contribution
 
