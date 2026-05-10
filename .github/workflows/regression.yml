@@ -1,25 +1,11 @@
-name: tests ddev-kibana
-
+name: regression.yml
 on:
-  pull_request:
-  push:
-    branches: [ main ]
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+' #semantic version format
-
-  workflow_dispatch:
-    inputs:
-      debug_enabled:
-        description: 'Debug with tmate set "debug_enabled"'
-        required: false
-        default: "false"
-
-defaults:
-  run:
-    shell: bash
-
+  schedule:
+    - cron: '00 20 * * 5'
+    - cron: '00 07 * * *'
+      
 permissions:
-  actions: write
+  actions: read
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,20 +13,20 @@ env:
   TEST_PATH: .
 
 jobs:
-  tests:
-    name: tests
-    defaults:
+  tests: 
+    name: regression test
+    defaults: 
       run:
         shell: bash
-
+    
     strategy:
       matrix:
         ddev_version: [ stable ] # ddev_version: [stable, edge, HEAD, PR]
-        os: [ubuntu-24.04] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
+        os: [ ubuntu-24.04 ] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
       fail-fast: false
-
+      
     runs-on: ${{ matrix.os }}
-
+    
     steps:
       - name: kibana image
         run: |
@@ -52,6 +38,10 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
+      - name: Environment setup
+        run: |
+          brew install jq yq
+
       - uses: ddev/ddev-add-on-test@v2
         with:
           ddev_version: ${{ matrix.ddev_version }}
@@ -61,4 +51,4 @@ jobs:
           addon_ref: ${{ env.ADD_ON_LAST_TAG }}
           addon_path: ${{ env.TEST_PATH }}
           disable_checkout_action: false
-          test_command: 'bats --timing tests/addon_dep_check.bats tests/validate_project_files.bats tests/test_local.bats tests/test_local_version_7.bats tests/test_local_version_8.bats'
+          test_command: 'bats --timing tests/regression.bats'

@@ -7,11 +7,11 @@ services:
       context: ./kibana
       dockerfile: Dockerfile
       args:
-        - KIBANA_VERSION=7.17.14
+        - KIBANA_VERSION=${KIBANA_TAG_VERSION:-9.3.3}
     expose:
       - "5601"
     environment:
-      KIBANA_VERSION: 7.17.14
+      KIBANA_VERSION: ${KIBANA_TAG_VERSION:-9.3.3}
       ELASTICSEARCH_HOSTS: '["http://ddev-${DDEV_SITENAME}-elasticsearch:9200"]'
       VIRTUAL_HOST: $DDEV_HOSTNAME
       HTTP_EXPOSE: 5600:5601
