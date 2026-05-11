@@ -44,13 +44,9 @@ jobs:
     steps:
       - name: kibana image
         run: |
-          docker pull kibana:7.17.14 >/dev/null
-          docker pull kibana:8.10.2 >/dev/null
-          docker pull kibana:9.3.3 >/dev/null
-
-      - name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:7.17.14 >/dev/null
+            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:8.10.2 >/dev/null
+            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:9.3.3 >/dev/null
 
       - uses: ddev/ddev-add-on-test@v2
         with:
