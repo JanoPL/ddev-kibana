@@ -1,8 +1,8 @@
-name: regression.yml
+name: Regression test
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '00 20 * * 5'
-    - cron: '00 07 * * *'
+    - cron: '15 04 * * *'
       
 permissions:
   actions: read
@@ -14,7 +14,7 @@ env:
 
 jobs:
   tests: 
-    name: regression test
+    name: Regression Test
     defaults: 
       run:
         shell: bash
@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         ddev_version: [ stable ] # ddev_version: [stable, edge, HEAD, PR]
-        os: [ ubuntu-24.04 ] # os: ubuntu-20.04, ubuntu-22.04, macos-12, macos-11, ubuntu-latest, macos-latest, windows-2019, windows-2022, windows-latest
+        os: [ ubuntu-24.04 ]
       fail-fast: false
       
     runs-on: ${{ matrix.os }}
@@ -30,17 +30,7 @@ jobs:
     steps:
       - name: kibana image
         run: |
-          docker pull kibana:7.17.14 >/dev/null
-          docker pull kibana:8.10.2 >/dev/null
-          docker pull kibana:9.3.3 >/dev/null
-
-      - name: Set up Homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
-
-      - name: Environment setup
-        run: |
-          brew install jq yq
+          docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:9.3.3 >/dev/null
 
       - uses: ddev/ddev-add-on-test@v2
         with:
