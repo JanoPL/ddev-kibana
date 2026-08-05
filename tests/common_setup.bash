@@ -46,4 +46,5 @@ common_setup_env_release() {
   
   ddev add-on get ddev/ddev-elasticsearch >/dev/null
   ddev add-on get janopl/ddev-kibana >/dev/null
+
 }
