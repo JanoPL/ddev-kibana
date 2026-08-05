@@ -1,9 +1,14 @@
 name: tests ddev-kibana
 
 on:
-  pull_request:
   push:
+    paths-ignore:
+      - "**.md"
+
+  pull_request:
     branches: [ main ]
+    paths-ignore:
+      - "**.md"
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+' #semantic version format
 
@@ -44,11 +49,11 @@ jobs:
     steps:
       - name: kibana image
         run: |
-            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:7.17.14 >/dev/null
-            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:8.10.2 >/dev/null
-            docker pull ghcr.io/janopl/ddev-kibana/kibana-sync:9.3.3 >/dev/null
+          docker pull kibana:7.17.14 >/dev/null
+          docker pull kibana:8.10.2 >/dev/null
+          docker pull kibana:9.3.3 >/dev/null
 
-      - uses: ddev/ddev-add-on-test@v2
+      - uses: ddev/github-action-add-on-test@v2
         with:
           ddev_version: ${{ matrix.ddev_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,4 +62,4 @@ jobs:
           addon_ref: ${{ env.ADD_ON_LAST_TAG }}
           addon_path: ${{ env.TEST_PATH }}
           disable_checkout_action: false
-          test_command: 'bats --timing tests/addon_dep_check.bats tests/validate_project_files.bats tests/test_local.bats tests/test_local_version_7.bats tests/test_local_version_8.bats'
+          test_command: 'bats --timing tests'
