@@ -11,6 +11,8 @@ dependencies:
 
 global_files:
 
+ddev_version_constraint: '>= v1.24.10'
+
 pre_install_actions:
 
 post_install_actions:
