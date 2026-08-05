@@ -1,4 +1,4 @@
-[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2026.svg)
+[![tests](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml/badge.svg)](https://github.com/janopl/ddev-kibana/actions/workflows/tests.yml)
 
 ## Instalation
 
@@ -8,12 +8,6 @@ For DDEV v1.23.5 or above run
 
 ```sh
 ddev add-on get janopl/ddev-kibana
-```
-
-For earlier versions of DDEV run
-
-```sh
-ddev get janopl/ddev-kibana
 ```
 
 ## Configuration
